@@ -25,9 +25,13 @@ namespace AlarmApp.Services
 
         public void SendAlarm(string alarmName)
         {
+            
             _logger.LogInformation(
+                $"\n-------------------------------------------------------------------------------------" +
                 $"\n ###[New alarm sending]### \n " +$"Alarm name: {alarmName}, Time: {DateTime.Now}\n"
+                +"-------------------------------------------------------------------------------------\n"
             );
+
         }
     }
 }

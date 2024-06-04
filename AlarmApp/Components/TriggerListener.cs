@@ -14,24 +14,27 @@ namespace AlarmApp.Components
 
         public Task TriggerComplete(ITrigger trigger, IJobExecutionContext context, SchedulerInstruction triggerInstructionCode, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Trigger completed");
+            Console.WriteLine($"Trigger with name: {trigger.Key.Name} completed");
+            
             return Task.CompletedTask;
         }
 
         public Task TriggerFired(ITrigger trigger, IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Trigger fired");
+            
+            Console.WriteLine($"Trigger with name: {trigger.Key.Name} fired");
             return Task.CompletedTask;
         }
 
         public Task TriggerMisfired(ITrigger trigger, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Trigger misfired");
+            Console.WriteLine($"Trigger with name: {trigger.Key.Name} misfired");
             return Task.CompletedTask;
         }
 
         public async Task<bool> VetoJobExecution(ITrigger trigger, IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
+            Console.WriteLine($"Job veto!!!");
             return false;
         }
     }

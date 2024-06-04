@@ -1,10 +1,13 @@
 ﻿using AlarmApp.Components;
+using AlarmApp.Configuration;
 using AlarmApp.Jobs;
 using AlarmApp.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Quartz;
+using Quartz.Core;
 using Quartz.Impl;
 using static Quartz.Logging.OperationName;
 
@@ -18,10 +21,20 @@ var builder = Host.CreateDefaultBuilder()
     })
     .ConfigureServices((context, services) =>
     {
+        services.Configure<QuartzSettings>(context.Configuration.GetSection("QuartzSettings"));
         services.AddQuartz(
-            q =>
+            options =>
             {
-                q.UseMicrosoftDependencyInjectionJobFactory();
+                options.UseMicrosoftDependencyInjectionJobFactory();
+
+                var quartzSettings = context.Configuration.GetSection("QuartzSettings").Get<QuartzSettings>();
+                options.SchedulerId = quartzSettings.SchedulerId;
+                options.SchedulerName = quartzSettings.SchedulerName;
+                options.MaxBatchSize = quartzSettings.MaxBatchSize;
+                options.InterruptJobsOnShutdown = quartzSettings.InterruptJobsOnShutdown;
+                options.InterruptJobsOnShutdownWithWait = quartzSettings.InterruptJobsOnShutdownWithWait;
+                
+
             });
         services.AddQuartzHostedService(options =>
         {
@@ -30,10 +43,15 @@ var builder = Host.CreateDefaultBuilder()
         services.AddTransient<AlarmJob>();
         services.AddSingleton<IAlarmService, AlarmService>();
         
+
     }).Build();
+
+
 
 var schedulerFactory = builder.Services.GetRequiredService<ISchedulerFactory>();
 var scheduler = await schedulerFactory.GetScheduler();
+
+Console.WriteLine($"Scheduler Id: {scheduler.SchedulerInstanceId}, Scheduler name: {scheduler.SchedulerName}");
 
 scheduler.ListenerManager.AddTriggerListener(new TriggerListener());
 scheduler.ListenerManager.AddJobListener(new JobListener());
@@ -41,33 +59,33 @@ scheduler.ListenerManager.AddSchedulerListener(new SchedulerListener());
 
 
 var alarm1 = JobBuilder.Create<AlarmJob>()
-                                       .WithIdentity("Alarm 1", "Testing alarms")
+                                       .WithIdentity("Alarm 1", "Repeating alarms")
                                        .Build();
 var alarm2 = JobBuilder.Create<AlarmJob>()
-                                       .WithIdentity("Alarm 2", "Testing alarms")
+                                       .WithIdentity("Alarm 2", "Repeating alarms")
                                        .Build();
 var alarm3 = JobBuilder.Create<AlarmJob>()
-                                       .WithIdentity("Alarm 3", "Testing alarms")
+                                       .WithIdentity("Alarm 3", "Repeating alarms")
                                        .Build();
 
 //await scheduler.AddJob(alarm, true);
 
 var trigger1 = TriggerBuilder.Create()
-                                 .WithIdentity("Test trigger 1", "Testing triggers")
+                                 .WithIdentity("Trigger 1", "Repeating triggers")
+                                 .StartNow()
+                                 .WithSimpleSchedule(z => z.WithIntervalInSeconds(1).RepeatForever())
+                                 .Build();
+
+var trigger2 = TriggerBuilder.Create()
+                                 .WithIdentity("Trigger 2", "Repeating triggers")
                                  .StartNow()
                                  .WithSimpleSchedule(z => z.WithIntervalInSeconds(5).RepeatForever())
                                  .Build();
 
-var trigger2 = TriggerBuilder.Create()
-                                 .WithIdentity("Test trigger 2", "Testing triggers")
-                                 .StartNow()
-                                 .WithSimpleSchedule(z => z.WithIntervalInSeconds(7).RepeatForever())
-                                 .Build();
-
 var trigger3 = TriggerBuilder.Create()
-                                 .WithIdentity("Test trigger 3", "Testing triggers")
+                                 .WithIdentity("Trigger 3", "Repeating triggers")
                                  .StartNow()
-                                 .WithSimpleSchedule(z => z.WithIntervalInSeconds(9).RepeatForever())
+                                 .WithSimpleSchedule(z => z.WithIntervalInSeconds(20).RepeatForever())
                                  .Build();
 
 //scheduler.Start();

@@ -13,127 +13,127 @@ namespace AlarmApp.Components
     {
         public Task JobAdded(IJobDetail jobDetail, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Added new alarm: {jobDetail.Key.Name}");
+            Console.WriteLine($"Added new alarm: {jobDetail.Key.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobDeleted(JobKey jobKey, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Deleted alarm: {jobKey.Name}");
+            Console.WriteLine($"Deleted alarm: {jobKey.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobInterrupted(JobKey jobKey, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Interrupted alarm: {jobKey.Name}");
+            Console.WriteLine($"Interrupted alarm: {jobKey.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobPaused(JobKey jobKey, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Paused alarm: {jobKey.Name}");
+            Console.WriteLine($"Paused alarm: {jobKey.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobResumed(JobKey jobKey, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Resumed alarm: {jobKey.Name}");
+            Console.WriteLine($"Resumed alarm: {jobKey.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobScheduled(ITrigger trigger, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Scheduled alarm: {trigger.JobKey.Name} + with trigger: {trigger.Key.Name}");
+            Console.WriteLine($"Scheduled alarm: {trigger.JobKey.Name} + with trigger: {trigger.Key.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobsPaused(string jobGroup, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Paused job group: {jobGroup}");
+            Console.WriteLine($"Paused job group: {jobGroup}");
             return Task.CompletedTask;
         }
 
         public Task JobsResumed(string jobGroup, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Resumed job group: {jobGroup}");
+            Console.WriteLine($"Resumed job group: {jobGroup}");
             return Task.CompletedTask;
         }
 
         public Task JobUnscheduled(TriggerKey triggerKey, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Unscheduled job: {triggerKey.Name}");
+            Console.WriteLine($"Unscheduled job: {triggerKey.Name}");
             return Task.CompletedTask;
         }
 
         public Task SchedulerError(string msg, SchedulerException cause, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Scheduler error: {msg}");
+            Console.WriteLine($"Scheduler error: {msg}");
             return Task.CompletedTask;
         }
 
         public Task SchedulerInStandbyMode(CancellationToken cancellationToken = default)
         {
-            Log.Information($"Scheduler in standby MODE");
+            Console.WriteLine($"Scheduler in standby MODE");
             return Task.CompletedTask;
         }
 
         public Task SchedulerShutdown(CancellationToken cancellationToken = default)
         {
-            Log.Information($"Scheduler shutdown");
+            Console.WriteLine($"Scheduler shutdown");
             return Task.CompletedTask;
         }
 
         public Task SchedulerShuttingdown(CancellationToken cancellationToken = default)
         {
-            Log.Information($"Scheduler shutttingdown");
+            Console.WriteLine($"Scheduler shutttingdown");
             return Task.CompletedTask;
         }
 
         public Task SchedulerStarted(CancellationToken cancellationToken = default)
         {
-            Log.Information($"Scheduler started");
+            Console.WriteLine($"Scheduler started");
             return Task.CompletedTask;
         }
 
         public Task SchedulerStarting(CancellationToken cancellationToken = default)
         {
-            Log.Information($"Scheduler starting");
+            Console.WriteLine($"Scheduler starting");
             return Task.CompletedTask;
         }
 
         public Task SchedulingDataCleared(CancellationToken cancellationToken = default)
         {
-            Log.Information($"Scheduler data cleared");
+            Console.WriteLine($"Scheduler data cleared");
             return Task.CompletedTask;
         }
 
         public Task TriggerFinalized(ITrigger trigger, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Trigger finalized: {trigger.Key.Name}");
+            Console.WriteLine($"Trigger finalized: {trigger.Key.Name}");
             return Task.CompletedTask;
         }
 
         public Task TriggerPaused(TriggerKey triggerKey, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Trigger paused: {triggerKey.Name}");
+            Console.WriteLine($"Trigger paused: {triggerKey.Name}");
             return Task.CompletedTask;
         }
 
         public Task TriggerResumed(TriggerKey triggerKey, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Trigger resumed: {triggerKey.Name}");
+            Console.WriteLine($"Trigger resumed: {triggerKey.Name}");
             return Task.CompletedTask;
         }
 
         public Task TriggersPaused(string? triggerGroup, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Triggers paused on group : {triggerGroup}");
+            Console.WriteLine($"Triggers paused on group : {triggerGroup}");
             return Task.CompletedTask;
         }
 
         public Task TriggersResumed(string? triggerGroup, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Triggers resumed on group : {triggerGroup}");
+            Console.WriteLine($"Triggers resumed on group : {triggerGroup}");
             return Task.CompletedTask;
         }
     }

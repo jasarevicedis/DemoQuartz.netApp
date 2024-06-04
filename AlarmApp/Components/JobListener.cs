@@ -14,19 +14,19 @@ namespace AlarmApp.Components
 
         public Task JobExecutionVetoed(IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Vetoed alarm: {context.JobDetail.Key.Name}");
+            Console.WriteLine($"Vetoed alarm: {context.JobDetail.Key.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobToBeExecuted(IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Executing alarm: {context.JobDetail.Key.Name}");
+            Console.WriteLine($"Executing alarm: {context.JobDetail.Key.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobWasExecuted(IJobExecutionContext context, JobExecutionException? jobException, CancellationToken cancellationToken = default)
         {
-            Log.Debug($"Executed alarm: {context.JobDetail.Key.Name}");
+            Console.WriteLine($"Executed alarm: {context.JobDetail.Key.Name}");
             return Task.CompletedTask;
         }
     }
