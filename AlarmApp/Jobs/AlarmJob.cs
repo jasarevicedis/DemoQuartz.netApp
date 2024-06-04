@@ -6,20 +6,24 @@ using System.Threading.Tasks;
 using Quartz;
 using Microsoft.Extensions.Logging;
 using AlarmApp.Services;
+using Serilog;
 
 namespace AlarmApp.Jobs
 {
     internal class AlarmJob : IJob
     {
-        IAlarmService _alarmService;
+        private readonly IAlarmService _alarmService;
+        private readonly ILogger<AlarmJob> _logger;
 
-        public AlarmJob(IAlarmService alarmService) {
+        public AlarmJob(ILogger<AlarmJob> logger, IAlarmService alarmService)
+        {
+            _logger = logger;
             _alarmService = alarmService;
         }
 
         public Task Execute(IJobExecutionContext context)
         {
-            _alarmService.SendAlarm("Novi alarm");
+            _alarmService.SendAlarm(context.JobDetail.Key.Name);
             return Task.CompletedTask;
         }
     }
