@@ -5,20 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Quartz;
 using Microsoft.Extensions.Logging;
+using AlarmApp.Services;
 
 namespace AlarmApp.Jobs
 {
     internal class AlarmJob : IJob
     {
-        private readonly ILogger<AlarmJob> _logger;
+        IAlarmService _alarmService;
 
-        public AlarmJob(ILogger<AlarmJob> logger) {
-            _logger = logger;
+        public AlarmJob(IAlarmService alarmService) {
+            _alarmService = alarmService;
         }
 
         public Task Execute(IJobExecutionContext context)
         {
-            _logger.LogInformation($"[[ Alarm ]] --> Time: {DateTime.Now}");
+            _alarmService.SendAlarm("Novi alarm");
             return Task.CompletedTask;
         }
     }
