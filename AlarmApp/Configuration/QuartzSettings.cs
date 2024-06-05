@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlarmApp.Configuration
+namespace AlarmApp
 {
-    internal class QuartzSettings
+    public class QuartzSettings
     {
         public string SchedulerId { get; set; } = String.Empty;
         public string SchedulerName {  get; set; } = String.Empty;

@@ -3,102 +3,103 @@ using AlarmApp.Configuration;
 using AlarmApp.Jobs;
 using AlarmApp.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Core;
 using Quartz.Impl;
+using Serilog;
+using System;
+using System.Reflection;
 using static Quartz.Logging.OperationName;
 
-
-var builder = Host.CreateDefaultBuilder()
-    .ConfigureLogging(logging =>
+namespace AlarmApp
+{
+    public class Program
     {
-        logging.ClearProviders();
-        logging.AddConsole();
-        logging.SetMinimumLevel(LogLevel.Information);
-    })
-    .ConfigureServices((context, services) =>
-    {
-        services.Configure<QuartzSettings>(context.Configuration.GetSection("QuartzSettings"));
-        services.AddQuartz(
-            options =>
-            {
-                options.UseMicrosoftDependencyInjectionJobFactory();
+        private static IConfiguration _configuration;
+        private static readonly IAppSettingsConfiguration _appSettings = new AppSettingsConfiguration();
 
-                var quartzSettings = context.Configuration.GetSection("QuartzSettings").Get<QuartzSettings>();
-                options.SchedulerId = quartzSettings.SchedulerId;
-                options.SchedulerName = quartzSettings.SchedulerName;
-                options.MaxBatchSize = quartzSettings.MaxBatchSize;
-                options.InterruptJobsOnShutdown = quartzSettings.InterruptJobsOnShutdown;
-                options.InterruptJobsOnShutdownWithWait = quartzSettings.InterruptJobsOnShutdownWithWait;
-                
-
-            });
-        services.AddQuartzHostedService(options =>
+        public static async Task Main(string[] args)
         {
-            options.WaitForJobsToComplete = true;
-        });
-        services.AddTransient<AlarmJob>();
-        services.AddSingleton<IAlarmService, AlarmService>();
-        
+            string currentExecutionPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-    }).Build();
+            await Console.Out.WriteLineAsync($"Current path: {currentExecutionPath}");
+
+            var configFileName = "AppSettings.json";
+
+            var config = new ConfigurationBuilder()
+            .SetBasePath(currentExecutionPath)
+            .AddJsonFile(configFileName, false, false)
+            .AddEnvironmentVariables()
+            .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(config)
+                .CreateLogger();
+
+            _configuration = CustomConfigurationBuilder.Build(currentExecutionPath, "AppSettings", "Debug");
+
+            _configuration.Bind("Configuration", _appSettings);
+
+            Log.Information("Application has been intitialized at {time}", DateTime.Now);
+
+            var builder = CreateHostBuilder(args);
+            var host = builder.Build();
+            
+            var schedulerFactory = host.Services.GetRequiredService<ISchedulerFactory>();
+            var scheduler = await schedulerFactory.GetScheduler();
+
+            Log.Information($"Scheduler Id: {scheduler.SchedulerInstanceId}, Scheduler name: {scheduler.SchedulerName}");
+            
+            scheduler.ListenerManager.AddTriggerListener(new TriggerListener(_appSettings));
+            scheduler.ListenerManager.AddJobListener(new JobListener(_appSettings));
+            scheduler.ListenerManager.AddSchedulerListener(new SchedulerListener(_appSettings));
+            
+            host.Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+                Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddSingleton(typeof(IAppSettingsConfiguration), _appSettings);
+
+                    services.AddQuartz(
+                    options =>
+                    {
+                        options.UseMicrosoftDependencyInjectionJobFactory();
+
+                        options.AddJobAndTrigger<AlarmJob>("SecondBasedAlarm", "Cron alarms", "SecondBasedTrigger", "Cron triggers", "* * * ? * *");
+                        options.AddJobAndTrigger<AlarmJob>("MinuteBasedAlarm", "Cron alarms", "MinuteBasedTrigger", "Cron triggers", "0 0/1 * 1/1 * ? *");
+                        //options.AddJobAndTrigger<AlarmJob>("Alarm 3", "Cron alarms", "Trigger 3", "Cron triggers", _appSettings.AlarmJobSchedule);
+                    }); 
+
+                    services.AddQuartzHostedService(q => q.WaitForJobsToComplete = false);
+                    //services.AddSingleton<IHostedService, MyHostedService>();
+                    services.AddHostedService<JobTrackingService>();
+
+                    services.AddTransient<AlarmJob>();
+                    services.AddSingleton<IAlarmService, AlarmService>();
+                })
+            .UseSerilog();
+    }
+}
+
+/*
+var builder = Host.CreateDefaultBuilder()
+.ConfigureLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConsole();
+    logging.SetMinimumLevel(LogLevel.Information);
+})
 
 
 
-var schedulerFactory = builder.Services.GetRequiredService<ISchedulerFactory>();
-var scheduler = await schedulerFactory.GetScheduler();
 
-Console.WriteLine($"Scheduler Id: {scheduler.SchedulerInstanceId}, Scheduler name: {scheduler.SchedulerName}");
-
-scheduler.ListenerManager.AddTriggerListener(new TriggerListener());
-scheduler.ListenerManager.AddJobListener(new JobListener());
-scheduler.ListenerManager.AddSchedulerListener(new SchedulerListener());
-
-
-var alarm1 = JobBuilder.Create<AlarmJob>()
-                                       .WithIdentity("Alarm 1", "Repeating alarms")
-                                       .Build();
-var alarm2 = JobBuilder.Create<AlarmJob>()
-                                       .WithIdentity("Alarm 2", "Repeating alarms")
-                                       .Build();
-var alarm3 = JobBuilder.Create<AlarmJob>()
-                                       .WithIdentity("Alarm 3", "Repeating alarms")
-                                       .Build();
-var alarm4 = JobBuilder.Create<AlarmJob>()
-                                       .WithIdentity("Alarm 4", "Specific alarms")
-                                       .Build();
-
-//await scheduler.AddJob(alarm, true);
-
-var trigger1 = TriggerBuilder.Create()
-                                 .WithIdentity("Trigger 1", "Repeating triggers")
-                                 .StartNow()
-                                 .WithSimpleSchedule(z => z.WithIntervalInSeconds(1).RepeatForever())
-                                 .Build();
-
-var trigger2 = TriggerBuilder.Create()
-                                 .WithIdentity("Trigger 2", "Repeating triggers")
-                                 .StartNow()
-                                 .WithSimpleSchedule(z => z.WithIntervalInSeconds(5).RepeatForever())
-                                 .Build();
-
-var trigger3 = TriggerBuilder.Create()
-                                 .WithIdentity("Trigger 3", "Repeating triggers")
-                                 .StartNow()
-                                 .WithSimpleSchedule(z => z.WithIntervalInSeconds(20).RepeatForever())
-                                 .Build();
-
-var trigger4 = TriggerBuilder.Create()
-                                 .WithIdentity("Trigger 4", "Cron triggers")
-                                 .WithSchedule(CronScheduleBuilder
-                                    .DailyAtHourAndMinute(8,11)
-                                    .InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")))
-                                 .Build();
-
-//scheduler.Start();
 
 await scheduler.ScheduleJob(alarm1, trigger1);
 await scheduler.ScheduleJob(alarm2, trigger2);
@@ -107,3 +108,4 @@ await scheduler.ScheduleJob(alarm4, trigger4);
 
 await builder.RunAsync();
 
+*/

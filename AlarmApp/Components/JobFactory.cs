@@ -1,33 +1,36 @@
 ﻿using AlarmApp.Jobs;
 using Quartz;
-using Quartz.Logging;
-using Quartz.Spi;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace AlarmApp.Components
 {
-    internal class JobFactory : IJobFactory
+    public static class JobFactory
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public JobFactory(IServiceProvider serviceProvider)
+        public static void AddJobAndTrigger<T>(
+            this IServiceCollectionQuartzConfigurator quartz, 
+            string jobName,
+            string jobGroup, 
+            string triggerName, 
+            string triggerGroup,
+            string dataSyncSchedule
+        ) where T : IJob
         {
-            _serviceProvider = serviceProvider;
-        }
+            //string jobName = typeof(T).Name;
+            //string _dataSyncIdentity = $"{jobName}_DataSyncTrigger";
 
-        public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
-        {
-            return (IJob)_serviceProvider.GetService(bundle.JobDetail.JobType);
-        }
+            if (string.IsNullOrEmpty(dataSyncSchedule))
+            {
+                throw new Exception($"Quartz.NET Cron schedule invalid for job {jobName}");
+            }
 
-        public void ReturnJob(IJob job)
-        {
-            (job as IDisposable)?.Dispose();
+            var jobKey = new JobKey(jobName, jobGroup);
+
+            quartz.AddJob<T>(opts => opts.WithIdentity(jobKey));
+
+            quartz.AddTrigger(opts => opts
+                                    .ForJob(jobKey)
+                                    .WithIdentity(triggerName, triggerGroup)
+                                    .WithCronSchedule(dataSyncSchedule)).InterruptJobsOnShutdown = true;
         }
     }
 }

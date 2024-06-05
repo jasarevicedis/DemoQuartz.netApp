@@ -1,4 +1,5 @@
-﻿using Quartz;
+﻿using AlarmApp.Configuration;
+using Quartz;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -9,131 +10,160 @@ using System.Threading.Tasks;
 
 namespace AlarmApp.Components
 {
-    internal class SchedulerListener : ISchedulerListener
+    public class SchedulerListener : ISchedulerListener
     {
+        public string Name => "Alarm scheduler listener";
+        private readonly IAppSettingsConfiguration _appSettings;
+
+        public SchedulerListener(IAppSettingsConfiguration appSettings)
+        {
+            _appSettings = appSettings;
+        }
+
         public Task JobAdded(IJobDetail jobDetail, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Added new alarm: {jobDetail.Key.Name}");
+            string alarmName = _appSettings.VariableColor + jobDetail.Key.Name + _appSettings.ResetColor;
+            Log.Information("Added new alarm: {alarmName}", alarmName);
             return Task.CompletedTask;
         }
 
         public Task JobDeleted(JobKey jobKey, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Deleted alarm: {jobKey.Name}");
+            string alarmName = _appSettings.VariableColor + jobKey.Name + _appSettings.ResetColor;
+            Log.Information("Deleted alarm: {alarmName}", alarmName);
             return Task.CompletedTask;
         }
 
         public Task JobInterrupted(JobKey jobKey, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Interrupted alarm: {jobKey.Name}");
+            string alarmName = _appSettings.VariableColor + jobKey.Name + _appSettings.ResetColor;
+            Log.Information("Interrupted alarm: {alarmName}",alarmName);
             return Task.CompletedTask;
         }
 
         public Task JobPaused(JobKey jobKey, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Paused alarm: {jobKey.Name}");
+            string alarmName = _appSettings.VariableColor + jobKey.Name + _appSettings.ResetColor;
+            Log.Information($"Paused alarm: {jobKey.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobResumed(JobKey jobKey, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Resumed alarm: {jobKey.Name}");
+            string alarmName = _appSettings.VariableColor + jobKey.Name + _appSettings.ResetColor;
+            Log.Information($"Resumed alarm: {jobKey.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobScheduled(ITrigger trigger, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Scheduled alarm: {trigger.JobKey.Name} + with trigger: {trigger.Key.Name}");
+            string alarmName = _appSettings.VariableColor + trigger.JobKey.Name + _appSettings.ResetColor;
+            Log.Information($"Scheduled alarm: {trigger.JobKey.Name} + with trigger: {trigger.Key.Name}");
             return Task.CompletedTask;
         }
 
         public Task JobsPaused(string jobGroup, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Paused job group: {jobGroup}");
+            string alarmName = _appSettings.VariableColor + jobGroup + _appSettings.ResetColor;
+            Log.Information($"Paused job group: {jobGroup}");
             return Task.CompletedTask;
         }
 
         public Task JobsResumed(string jobGroup, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Resumed job group: {jobGroup}");
+            string alarmName = _appSettings.VariableColor + jobGroup + _appSettings.ResetColor;
+            Log.Information($"Resumed job group: {jobGroup}");
             return Task.CompletedTask;
         }
 
         public Task JobUnscheduled(TriggerKey triggerKey, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Unscheduled job: {triggerKey.Name}");
+            string alarmName = _appSettings.VariableColor + triggerKey.Name + _appSettings.ResetColor;
+            Log.Information($"Unscheduled job: {triggerKey.Name}");
             return Task.CompletedTask;
         }
 
         public Task SchedulerError(string msg, SchedulerException cause, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Scheduler error: {msg}");
+            string alarmName = _appSettings.VariableColor + msg + _appSettings.ResetColor;
+            Log.Information($"Scheduler error: {msg}");
             return Task.CompletedTask;
         }
 
         public Task SchedulerInStandbyMode(CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Scheduler in standby MODE");
+            string notification = _appSettings.VariableColor + "Scheduler in standby MODE" + _appSettings.ResetColor;
+            Log.Information(notification);
             return Task.CompletedTask;
         }
 
         public Task SchedulerShutdown(CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Scheduler shutdown");
+            string notification = _appSettings.VariableColor + "Scheduler shutdown" + _appSettings.ResetColor;
+            Log.Information(notification);
             return Task.CompletedTask;
         }
 
         public Task SchedulerShuttingdown(CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Scheduler shutttingdown");
+            string notification = _appSettings.VariableColor + "Scheduler shutttingdown" + _appSettings.ResetColor;
+            Log.Information(notification);
             return Task.CompletedTask;
         }
 
         public Task SchedulerStarted(CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Scheduler started");
+            string notification = _appSettings.VariableColor + "Scheduler started" + _appSettings.ResetColor;
+            Log.Information(notification);
             return Task.CompletedTask;
         }
 
         public Task SchedulerStarting(CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Scheduler starting");
+            string notification = _appSettings.VariableColor + "Scheduler starting" + _appSettings.ResetColor;
+            Log.Information(notification);
             return Task.CompletedTask;
         }
 
         public Task SchedulingDataCleared(CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Scheduler data cleared");
+            string notification = _appSettings.VariableColor + "Scheduler data cleared" + _appSettings.ResetColor;
+            Log.Information(notification);
             return Task.CompletedTask;
         }
 
         public Task TriggerFinalized(ITrigger trigger, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Trigger finalized: {trigger.Key.Name}");
+            string triggerName = _appSettings.VariableColor + trigger.Key.Name + _appSettings.ResetColor;
+            Log.Information("Trigger finalized: {triggerName}", triggerName);
             return Task.CompletedTask;
         }
 
         public Task TriggerPaused(TriggerKey triggerKey, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Trigger paused: {triggerKey.Name}");
+            string triggerName = _appSettings.VariableColor + triggerKey.Name + _appSettings.ResetColor;
+            Log.Information("Trigger paused: {triggerName}", triggerName);
             return Task.CompletedTask;
         }
 
         public Task TriggerResumed(TriggerKey triggerKey, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Trigger resumed: {triggerKey.Name}");
+            string triggerName = _appSettings.VariableColor + triggerKey.Name + _appSettings.ResetColor;
+            Log.Information("Trigger resumed: {triggerName}", triggerName);
             return Task.CompletedTask;
         }
 
         public Task TriggersPaused(string? triggerGroup, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Triggers paused on group : {triggerGroup}");
+            triggerGroup = _appSettings.VariableColor + triggerGroup + _appSettings.ResetColor;
+            Log.Information("Triggers paused on group : {triggerGroup}", triggerGroup);
             return Task.CompletedTask;
         }
 
         public Task TriggersResumed(string? triggerGroup, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Triggers resumed on group : {triggerGroup}");
+            triggerGroup = _appSettings.VariableColor + triggerGroup + _appSettings.ResetColor;
+            Log.Information("Triggers resumed on group : {triggerGroup}", triggerGroup);
             return Task.CompletedTask;
         }
     }
