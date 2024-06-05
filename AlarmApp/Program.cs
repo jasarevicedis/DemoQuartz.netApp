@@ -67,6 +67,9 @@ var alarm2 = JobBuilder.Create<AlarmJob>()
 var alarm3 = JobBuilder.Create<AlarmJob>()
                                        .WithIdentity("Alarm 3", "Repeating alarms")
                                        .Build();
+var alarm4 = JobBuilder.Create<AlarmJob>()
+                                       .WithIdentity("Alarm 4", "Specific alarms")
+                                       .Build();
 
 //await scheduler.AddJob(alarm, true);
 
@@ -88,11 +91,19 @@ var trigger3 = TriggerBuilder.Create()
                                  .WithSimpleSchedule(z => z.WithIntervalInSeconds(20).RepeatForever())
                                  .Build();
 
+var trigger4 = TriggerBuilder.Create()
+                                 .WithIdentity("Trigger 4", "Cron triggers")
+                                 .WithSchedule(CronScheduleBuilder
+                                    .DailyAtHourAndMinute(8,11)
+                                    .InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")))
+                                 .Build();
+
 //scheduler.Start();
 
 await scheduler.ScheduleJob(alarm1, trigger1);
 await scheduler.ScheduleJob(alarm2, trigger2);
 await scheduler.ScheduleJob(alarm3, trigger3);
+await scheduler.ScheduleJob(alarm4, trigger4);
 
 await builder.RunAsync();
 
