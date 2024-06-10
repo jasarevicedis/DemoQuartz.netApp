@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Core;
 using Quartz.Impl;
+using Quartz.Impl.Matchers;
 using Serilog;
 using System;
 using System.Reflection;
@@ -57,7 +58,23 @@ namespace AlarmApp
             scheduler.ListenerManager.AddTriggerListener(new TriggerListener(_appSettings));
             scheduler.ListenerManager.AddJobListener(new JobListener(_appSettings));
             scheduler.ListenerManager.AddSchedulerListener(new SchedulerListener(_appSettings));
+
             
+            /*
+            foreach (var jobDetail in from jobGroupName in scheduler.JobGroupNames
+                                      from jobName in scheduler.GetJobNames(jobGroupName)
+                                      select scheduler.GetJobDetail(jobName, jobGroupName))
+            {
+                //Get props about job from jobDetail
+            }
+
+            foreach (var triggerDetail in from triggerGroupName in scheduler.TriggerGroupNames
+                                          from triggerName in scheduler.GetTriggerNames(triggerGroupName)
+                                          select scheduler.GetTrigger(triggerName, triggerGroupName))
+            {
+                //Get props about trigger from triggerDetail
+            }
+            */
             host.Run();
         }
 
@@ -72,17 +89,26 @@ namespace AlarmApp
                     {
                         options.UseMicrosoftDependencyInjectionJobFactory();
 
-                        options.AddJobAndTrigger<AlarmJob>("SecondBasedAlarm", "Cron alarms", "SecondBasedTrigger", "Cron triggers", "* * * ? * *");
+                        options.AddJobAndTrigger<AlarmJob>("SecondBasedAlarm", "Cron alarms", "SecondBasedTrigger", "Cron triggers", "0/4 * * ? * * *");
                         options.AddJobAndTrigger<AlarmJob>("MinuteBasedAlarm", "Cron alarms", "MinuteBasedTrigger", "Cron triggers", "0 0/1 * 1/1 * ? *");
                         //options.AddJobAndTrigger<AlarmJob>("Alarm 3", "Cron alarms", "Trigger 3", "Cron triggers", _appSettings.AlarmJobSchedule);
                     }); 
 
                     services.AddQuartzHostedService(q => q.WaitForJobsToComplete = false);
+
+                    services.AddSingleton<IScheduler>(provider =>
+                    {
+                        var schedulerFactory = provider.GetRequiredService<ISchedulerFactory>();
+                        return schedulerFactory.GetScheduler().Result;
+                    });
+
                     //services.AddSingleton<IHostedService, MyHostedService>();
                     services.AddHostedService<JobTrackingService>();
 
                     services.AddTransient<AlarmJob>();
                     services.AddSingleton<IAlarmService, AlarmService>();
+                    
+
                 })
             .UseSerilog();
     }
