@@ -2,11 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Impl.Matchers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AlarmApp.Services
 {
@@ -21,13 +16,15 @@ namespace AlarmApp.Services
         private Timer _timer;
         private readonly IScheduler _scheduler;
         private readonly TimeZoneInfo _timeZone;
+        private readonly IConsolePrintingService _consolePrintingService;
 
 
-        public JobTrackingService(ILogger<IHostedService> logger, IScheduler scheduler)
+        public JobTrackingService(ILogger<IHostedService> logger, IScheduler scheduler, IConsolePrintingService consolePrintingService)
         {
             _logger = logger;
             _scheduler = scheduler;
-            _timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"); 
+            _timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+            _consolePrintingService = consolePrintingService;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -40,18 +37,17 @@ namespace AlarmApp.Services
         }
         private async void DoWork(object state)
         {
-            //_logger.LogInformation("Job tracking service is working. Time: {time}", DateTimeOffset.Now);
-            Console.WriteLine("--------------------------[ Current schedule ]------------------------------");
+            var jobDetails = new List<String>();
             var jobGroupNames = await _scheduler.GetJobGroupNames();
 
             foreach (var groupName in jobGroupNames)
             {
-                Console.WriteLine("Group: " + groupName);
+                jobDetails.Add("Group: " + groupName);
                 var jobKeys = await _scheduler.GetJobKeys(GroupMatcher<JobKey>.GroupEquals(groupName));
 
                 foreach (var jobKey in jobKeys)
                 {
-                    Console.WriteLine("\tJob: " + jobKey);
+                    jobDetails.Add("\tJob: " + jobKey);
                     var jobDetail = await _scheduler.GetJobDetail(jobKey);
                     var triggers = await _scheduler.GetTriggersOfJob(jobKey);
 
@@ -60,7 +56,7 @@ namespace AlarmApp.Services
 
                         var triggerState = await _scheduler.GetTriggerState(trigger.Key);
 
-                        Console.WriteLine($"\t\tTrigger: {trigger.Key}, State: {triggerState}");
+                        jobDetails.Add($"\t\tTrigger: {trigger.Key}, State: {triggerState}");
 
                         DateTimeOffset? nextFireTime = trigger.GetNextFireTimeUtc();
                         
@@ -69,19 +65,18 @@ namespace AlarmApp.Services
                             var nextFireTimeUtc2 = TimeZoneInfo.ConvertTimeFromUtc(nextFireTime.Value.DateTime, _timeZone);
                             TimeSpan difference = nextFireTimeUtc2 - TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _timeZone);
                             double seconds = difference.TotalSeconds;
-                            Console.WriteLine($"\t\tNext job execution for {jobKey} at {nextFireTimeUtc2} (Seconds left: {(int)seconds})");
+                            jobDetails.Add($"\t\tNext job execution for {jobKey} at {nextFireTimeUtc2} (Seconds left: {(int)seconds})");
                         }
                     }
                 }
             }
-            Console.WriteLine("[__________________________________________________________________________]");
-
+            
+            _consolePrintingService.PrintWindow("Jobs status", jobDetails);
         }
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Job tracking service is stopping");
             _timer?.Change(Timeout.Infinite, 0);
-
         }
 
         public void Dispose()

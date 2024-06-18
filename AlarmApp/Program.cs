@@ -106,6 +106,7 @@ namespace AlarmApp
                     services.AddHostedService<JobTrackingService>();
 
                     services.AddTransient<AlarmJob>();
+                    services.AddTransient<IConsolePrintingService, ConsolePrintingService>();
                     services.AddSingleton<IAlarmService, AlarmService>();
                     
 
