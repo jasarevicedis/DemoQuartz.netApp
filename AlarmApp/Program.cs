@@ -13,6 +13,8 @@ using Quartz.Impl;
 using Quartz.Impl.Matchers;
 using Serilog;
 using System;
+using System.Text.Json;
+using System.Collections.Specialized;
 using System.Reflection;
 using static Quartz.Logging.OperationName;
 
@@ -26,6 +28,7 @@ namespace AlarmApp
         public static async Task Main(string[] args)
         {
             string currentExecutionPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            
 
             await Console.Out.WriteLineAsync($"Current path: {currentExecutionPath}");
 
@@ -33,8 +36,9 @@ namespace AlarmApp
 
             var config = new ConfigurationBuilder()
             .SetBasePath(currentExecutionPath)
-            .AddJsonFile(configFileName, false, false)
+            .AddJsonFile(configFileName, optional: false, reloadOnChange: false)
             .AddEnvironmentVariables()
+            .AddUserSecrets<Program>()
             .Build();
 
             Log.Logger = new LoggerConfiguration()
@@ -80,8 +84,24 @@ namespace AlarmApp
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
                 Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    var builtConfig = config.Build();
+                    //if (context.HostingEnvironment.IsDevelopment())
+                    //{
+                        config.AddUserSecrets<Program>();
+                    //}
+                })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    // Debugging code to print out configuration values
+                    //foreach (var kvp in hostContext.Configuration.AsEnumerable())
+                    //{
+                        //Log.Error($"{kvp.Key} = {kvp.Value}");
+                    //}
+                    //string connectionString = hostContext.Configuration.GetConnectionString("DefaultConnection");
+                    string connectionString = hostContext.Configuration.GetConnectionString("DefaultConnection");
+                    
                     services.AddSingleton(typeof(IAppSettingsConfiguration), _appSettings);
 
                     services.AddQuartz(
@@ -92,13 +112,36 @@ namespace AlarmApp
                         options.AddJobAndTrigger<AlarmJob>("SecondBasedAlarm", "Cron alarms", "SecondBasedTrigger", "Cron triggers", "0/4 * * ? * * *");
                         options.AddJobAndTrigger<AlarmJob>("MinuteBasedAlarm", "Cron alarms", "MinuteBasedTrigger", "Cron triggers", "0 0/1 * 1/1 * ? *");
                         //options.AddJobAndTrigger<AlarmJob>("Alarm 3", "Cron alarms", "Trigger 3", "Cron triggers", _appSettings.AlarmJobSchedule);
+                        options.UsePersistentStore(s =>
+                        {
+                            s.UseProperties = true;
+                            //_configuration.GetConnectionString("BlazingQuartzDb")
+                            s.UseSQLite(connectionString);
+                            s.UseJsonSerializer();
+                        });
                     }); 
+
+
 
                     services.AddQuartzHostedService(q => q.WaitForJobsToComplete = false);
 
+                    
+
+                    NameValueCollection props = new NameValueCollection
+                    {
+                        { "quartz.jobStore.type", "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz" },
+                        { "quartz.jobStore.driverDelegateType", "Quartz.Impl.AdoJobStore.SQLiteDelegate, Quartz" },
+                        { "quartz.serializer.type", "json" },
+                        { "quartz.jobStore.useProperties", "true" },
+                        { "quartz.jobStore.dataSource", "myDS" },
+                        { "quartz.dataSource.myDS.connectionStringName", connectionString},
+                        { "quartz.dataSource.myDS.provider", "SQLite-Microsoft" },
+                        { "quartz.jobStore.performSchemaValidation", "false" }
+                    };
+
                     services.AddSingleton<IScheduler>(provider =>
                     {
-                        var schedulerFactory = provider.GetRequiredService<ISchedulerFactory>();
+                        StdSchedulerFactory schedulerFactory = new StdSchedulerFactory(props);
                         return schedulerFactory.GetScheduler().Result;
                     });
 
