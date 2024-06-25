@@ -2,6 +2,7 @@
 {
     partial class Form1
     {
+
         /// <summary>
         ///  Required designer variable.
         /// </summary>
@@ -33,6 +34,7 @@
             button2 = new Button();
             button1 = new Button();
             alarmTab = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
             addAlarmButton = new Button();
             panel1.SuspendLayout();
             alarmTab.SuspendLayout();
@@ -85,11 +87,27 @@
             // alarmTab
             // 
             alarmTab.BackColor = SystemColors.ControlLight;
+            alarmTab.Controls.Add(tableLayoutPanel1);
             alarmTab.Controls.Add(addAlarmButton);
             alarmTab.Location = new Point(256, 34);
             alarmTab.Name = "alarmTab";
             alarmTab.Size = new Size(1039, 712);
             alarmTab.TabIndex = 1;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoScroll = true;
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 49.0991F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.9009F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 349F));
+            tableLayoutPanel1.Dock = DockStyle.Top;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new Size(1039, 622);
+            tableLayoutPanel1.TabIndex = 1;
             // 
             // addAlarmButton
             // 
@@ -100,6 +118,7 @@
             addAlarmButton.TabIndex = 0;
             addAlarmButton.Text = "Add alarm";
             addAlarmButton.UseVisualStyleBackColor = false;
+            addAlarmButton.Click += addAlarmButton_Click_1;
             // 
             // Form1
             // 
@@ -127,5 +146,14 @@
         private Button button2;
         private Panel alarmTab;
         private Button addAlarmButton;
+        private TableLayoutPanel tableLayoutPanel1;
+
+        
+
+        
     }
+
+    
+
+
 }

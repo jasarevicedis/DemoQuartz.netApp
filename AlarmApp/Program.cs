@@ -109,9 +109,9 @@ namespace AlarmApp
                     {
                         options.UseMicrosoftDependencyInjectionJobFactory();
 
-                        options.AddJobAndTrigger<AlarmJob>("SecondBasedAlarm", "Cron alarms", "SecondBasedTrigger", "Cron triggers", "0/4 * * ? * * *");
+                        options.AddJobAndTrigger<AlarmJob>("SecondBasedAlarm88", "Cron alarms88", "SecondBasedTrigger88", "Cron triggers", "0/4 * * ? * * *");
                         options.AddJobAndTrigger<AlarmJob>("MinuteBasedAlarm", "Cron alarms", "MinuteBasedTrigger", "Cron triggers", "0 0/1 * 1/1 * ? *");
-                        //options.AddJobAndTrigger<AlarmJob>("Alarm 3", "Cron alarms", "Trigger 3", "Cron triggers", _appSettings.AlarmJobSchedule);
+                        options.AddJobAndTrigger<AlarmJob>("Alarm 3", "Cron alarms", "Trigger 3", "Cron triggers", _appSettings.AlarmJobSchedule);
                         options.UsePersistentStore(s =>
                         {
                             s.UseProperties = true;
