@@ -15,7 +15,7 @@ namespace AlarmApp.Models
             SnoozeTime = snoozeTime;
             CronExpression = cronExpression;
         }
-
+        public int Id { get; set; }
         public string Name { get; set; }
         public int SnoozeTime { get; set; }
         public string CronExpression { get; set; }

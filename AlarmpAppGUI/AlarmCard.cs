@@ -12,6 +12,7 @@ namespace AlarmpAppGUI
 {
     public partial class AlarmCard : UserControl
     {
+        public int Id { get; set; }
         public string AlarmName
         {
             get => lblAlarmName.Text;

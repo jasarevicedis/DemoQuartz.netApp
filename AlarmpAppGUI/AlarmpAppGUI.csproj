@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AlarmApp\AlarmApp.csproj" />
+    <ProjectReference Include="..\AlarmApp\AlarmAppConsole.csproj" />
   </ItemGroup>
 
 </Project>

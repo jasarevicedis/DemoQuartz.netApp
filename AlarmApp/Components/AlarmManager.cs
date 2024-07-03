@@ -12,6 +12,7 @@ namespace AlarmApp.Components
     {
         Task AddAlarm(Alarm alarm);
         Task<List<Alarm>> GetAlarms();
+        Task DeleteAlarm(int id);
     }
     public class AlarmManager: IAlarmManager
     {
@@ -115,5 +116,52 @@ namespace AlarmApp.Components
 
             return alarms;
         }
+
+        public async Task DeleteAlarm(int alarmId)
+        {
+            var scheduler = await _schedulerFactory.GetScheduler();
+
+            var jobKey = await GetJobKeyById(alarmId);
+            if (jobKey != null)
+            {
+                await scheduler.DeleteJob(jobKey);
+            }
+            DeleteAlarmFromDatabase(alarmId);
+        }
+
+        private static void DeleteAlarmFromDatabase(int alarmId)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM ALARMS WHERE ID = $alarmId";
+                command.Parameters.AddWithValue("$alarmId", alarmId);
+
+                command.ExecuteNonQuery();
+            }
+        }
+        private async Task<JobKey> GetJobKeyById(int alarmId)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT ALARM_NAME FROM ALARMS WHERE ID = $alarmId";
+                command.Parameters.AddWithValue("$alarmId", alarmId);
+
+                var alarmName = (string)command.ExecuteScalar();
+                if (!string.IsNullOrEmpty(alarmName))
+                {
+                    return new JobKey(alarmName, "Alarm Jobs");
+                }
+            }
+            return null;
+        }
+
+
+
     }
 }

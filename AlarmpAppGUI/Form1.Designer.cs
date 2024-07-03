@@ -63,6 +63,7 @@
             button3.TabIndex = 2;
             button3.Text = "Settings";
             button3.UseVisualStyleBackColor = false;
+            button3.Click += button3_Click;
             // 
             // button2
             // 
@@ -94,6 +95,7 @@
             alarmTab.Name = "alarmTab";
             alarmTab.Size = new Size(1039, 746);
             alarmTab.TabIndex = 1;
+            alarmTab.Paint += alarmTab_Paint;
             // 
             // tableLayoutPanel1
             // 
@@ -109,6 +111,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.Size = new Size(1011, 652);
             tableLayoutPanel1.TabIndex = 1;
+            tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
             // 
             // addAlarmButton
             // 

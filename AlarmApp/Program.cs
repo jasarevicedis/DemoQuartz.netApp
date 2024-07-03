@@ -62,7 +62,7 @@ namespace AlarmApp
             //here is when jobs and triggers are stored to database
             Log.Information($"Scheduler Id: {scheduler.SchedulerInstanceId}, Scheduler name: {scheduler.SchedulerName}");
 
-            Alarm alarm1 = new Alarm("TestAlarm6666", 200, "0/2 * * ? * * *");
+            Alarm alarm1 = new Alarm("TestAlarm7777", 200, "0/2 * * ? * * *");
 
             var alarmManager = host.Services.GetRequiredService<IAlarmManager>();
 
@@ -74,29 +74,14 @@ namespace AlarmApp
                 Console.WriteLine($"Alarm: {alarm.Name}, Snooze: {alarm.SnoozeTime}, Cron: {alarm.CronExpression}");
             }
 
-            //IServiceCollectionQuartzConfigurator options = null;
-            //AlarmManager.AddAlarm(options,alarm1);
+            
 
             scheduler.ListenerManager.AddTriggerListener(new TriggerListener(_appSettings));
             scheduler.ListenerManager.AddJobListener(new JobListener(_appSettings));
             scheduler.ListenerManager.AddSchedulerListener(new SchedulerListener(_appSettings));
 
             
-            /*
-            foreach (var jobDetail in from jobGroupName in scheduler.JobGroupNames
-                                      from jobName in scheduler.GetJobNames(jobGroupName)
-                                      select scheduler.GetJobDetail(jobName, jobGroupName))
-            {
-                //Get props about job from jobDetail
-            }
-
-            foreach (var triggerDetail in from triggerGroupName in scheduler.TriggerGroupNames
-                                          from triggerName in scheduler.GetTriggerNames(triggerGroupName)
-                                          select scheduler.GetTrigger(triggerName, triggerGroupName))
-            {
-                //Get props about trigger from triggerDetail
-            }
-            */
+            
             host.Run();
         }
 
@@ -105,19 +90,13 @@ namespace AlarmApp
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     var builtConfig = config.Build();
-                    //if (context.HostingEnvironment.IsDevelopment())
-                    //{
+                    
                         config.AddUserSecrets<Program>();
-                    //}
+                    
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    // Debugging code to print out configuration values
-                    //foreach (var kvp in hostContext.Configuration.AsEnumerable())
-                    //{
-                        //Log.Error($"{kvp.Key} = {kvp.Value}");
-                    //}
-                    //string connectionString = hostContext.Configuration.GetConnectionString("DefaultConnection");
+                    
                     string connectionString = hostContext.Configuration.GetConnectionString("DefaultConnection");
                     
                     services.AddSingleton(typeof(IAppSettingsConfiguration), _appSettings);
@@ -153,21 +132,12 @@ namespace AlarmApp
                         options.UsePersistentStore(s =>
                         {
                             s.UseProperties = true;
-                            //_configuration.GetConnectionString("BlazingQuartzDb")
                             s.UseSQLite(connectionString);
                             s.UseJsonSerializer();
                         });
-
-                       // Alarm alarm1 = new Alarm("TestAlarm2222", "...", 200, "0/2 * * ? * * *");
-
-                        //options.AddAlarm(alarm1);
                     }); 
 
 
-
-                    
-
-                    //services.AddSingleton<IHostedService, MyHostedService>();
                     services.AddHostedService<JobTrackingService>();
 
                     services.AddTransient<AlarmJob>();
@@ -180,25 +150,3 @@ namespace AlarmApp
             .UseSerilog();
     }
 }
-
-/*
-var builder = Host.CreateDefaultBuilder()
-.ConfigureLogging(logging =>
-{
-    logging.ClearProviders();
-    logging.AddConsole();
-    logging.SetMinimumLevel(LogLevel.Information);
-})
-
-
-
-
-
-await scheduler.ScheduleJob(alarm1, trigger1);
-await scheduler.ScheduleJob(alarm2, trigger2);
-await scheduler.ScheduleJob(alarm3, trigger3);
-await scheduler.ScheduleJob(alarm4, trigger4);
-
-await builder.RunAsync();
-
-*/

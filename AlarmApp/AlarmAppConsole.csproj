@@ -37,4 +37,9 @@
 		<PackageReference Include="System.Data.SQLite" Version="1.0.118" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\BLL\BLL.csproj" />
+	  <ProjectReference Include="..\DAL\DAL.csproj" />
+	</ItemGroup>
+
 </Project>

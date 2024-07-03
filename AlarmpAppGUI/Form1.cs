@@ -13,7 +13,7 @@ namespace AlarmpAppGUI
             _alarmManager = alarmManager;
             for (int i = 0; i < tableLayoutPanel1.ColumnCount; i++)
             {
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150)); 
+                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150));
             }
         }
 
@@ -50,6 +50,7 @@ namespace AlarmpAppGUI
         {
             var card = new AlarmCard
             {
+                Id = alarm.Id,
                 Name = "card" + alarmCount++,
                 Dock = DockStyle.Fill,
                 AlarmName = alarm.Name,
@@ -63,6 +64,14 @@ namespace AlarmpAppGUI
             */
             // Add an event handler for the delete button
             //card.DeleteButton.Click += (sender, e) => DeleteCard(card);
+            var deleteButton = new Button
+            {
+                Text = "Delete",
+                Tag = alarm.Id
+            };
+            deleteButton.Click += async (sender, e) => await DeleteAlarm((int)deleteButton.Tag);
+
+            card.Controls.Add(deleteButton);
 
             tableLayoutPanel1.Controls.Add(card);
             tableLayoutPanel1.RowCount = (int)Math.Ceiling(tableLayoutPanel1.Controls.Count / 3.0);
@@ -72,6 +81,19 @@ namespace AlarmpAppGUI
             for (int i = 0; i < tableLayoutPanel1.RowCount; i++)
             {
                 tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 200));
+            }
+        }
+        private async Task DeleteAlarm(int alarmId)
+        {
+            await _alarmManager.DeleteAlarm(alarmId);
+
+            foreach (Control control in tableLayoutPanel1.Controls)
+            {
+                if (control is AlarmCard card && card.Id == alarmId)
+                {
+                    tableLayoutPanel1.Controls.Remove(control);
+                    break;
+                }
             }
         }
 
@@ -86,6 +108,21 @@ namespace AlarmpAppGUI
                     AddAlarm(alarm);
                 }
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void alarmTab_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
