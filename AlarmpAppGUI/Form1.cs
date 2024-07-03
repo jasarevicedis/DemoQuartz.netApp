@@ -53,7 +53,13 @@ namespace AlarmpAppGUI
 
         private void addAlarmButton_Click_1(object sender, EventArgs e)
         {
-            AddAlarm();
+            using (var addAlarmForm = new AddAlarmForm())
+            {
+                if (addAlarmForm.ShowDialog() == DialogResult.OK)
+                {
+                    AddAlarm();
+                }
+            }
         }
     }
 }

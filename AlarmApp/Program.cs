@@ -17,6 +17,8 @@ using System.Text.Json;
 using System.Collections.Specialized;
 using System.Reflection;
 using static Quartz.Logging.OperationName;
+using AlarmApp.Models;
+using Microsoft.Extensions.Options;
 
 namespace AlarmApp
 {
@@ -57,8 +59,24 @@ namespace AlarmApp
             var schedulerFactory = host.Services.GetRequiredService<ISchedulerFactory>();
             var scheduler = await schedulerFactory.GetScheduler();
 
+            //here is when jobs and triggers are stored to database
             Log.Information($"Scheduler Id: {scheduler.SchedulerInstanceId}, Scheduler name: {scheduler.SchedulerName}");
-            
+
+            Alarm alarm1 = new Alarm("TestAlarm6666", 200, "0/2 * * ? * * *");
+
+            var alarmManager = host.Services.GetRequiredService<IAlarmManager>();
+
+            await alarmManager.AddAlarm(alarm1);
+
+            var alarms = await alarmManager.GetAlarms();
+            foreach (var alarm in alarms)
+            {
+                Console.WriteLine($"Alarm: {alarm.Name}, Snooze: {alarm.SnoozeTime}, Cron: {alarm.CronExpression}");
+            }
+
+            //IServiceCollectionQuartzConfigurator options = null;
+            //AlarmManager.AddAlarm(options,alarm1);
+
             scheduler.ListenerManager.AddTriggerListener(new TriggerListener(_appSettings));
             scheduler.ListenerManager.AddJobListener(new JobListener(_appSettings));
             scheduler.ListenerManager.AddSchedulerListener(new SchedulerListener(_appSettings));
@@ -104,28 +122,9 @@ namespace AlarmApp
                     
                     services.AddSingleton(typeof(IAppSettingsConfiguration), _appSettings);
 
-                    services.AddQuartz(
-                    options =>
-                    {
-                        options.UseMicrosoftDependencyInjectionJobFactory();
-
-                        options.AddJobAndTrigger<AlarmJob>("SecondBasedAlarm88", "Cron alarms88", "SecondBasedTrigger88", "Cron triggers", "0/4 * * ? * * *");
-                        options.AddJobAndTrigger<AlarmJob>("MinuteBasedAlarm", "Cron alarms", "MinuteBasedTrigger", "Cron triggers", "0 0/1 * 1/1 * ? *");
-                        options.AddJobAndTrigger<AlarmJob>("Alarm 3", "Cron alarms", "Trigger 3", "Cron triggers", _appSettings.AlarmJobSchedule);
-                        options.UsePersistentStore(s =>
-                        {
-                            s.UseProperties = true;
-                            //_configuration.GetConnectionString("BlazingQuartzDb")
-                            s.UseSQLite(connectionString);
-                            s.UseJsonSerializer();
-                        });
-                    }); 
-
-
-
                     services.AddQuartzHostedService(q => q.WaitForJobsToComplete = false);
 
-                    
+
 
                     NameValueCollection props = new NameValueCollection
                     {
@@ -145,13 +144,37 @@ namespace AlarmApp
                         return schedulerFactory.GetScheduler().Result;
                     });
 
+                    services.AddQuartz(
+                    options =>
+                    {
+                        options.UseMicrosoftDependencyInjectionJobFactory();
+                        
+                        
+                        options.UsePersistentStore(s =>
+                        {
+                            s.UseProperties = true;
+                            //_configuration.GetConnectionString("BlazingQuartzDb")
+                            s.UseSQLite(connectionString);
+                            s.UseJsonSerializer();
+                        });
+
+                       // Alarm alarm1 = new Alarm("TestAlarm2222", "...", 200, "0/2 * * ? * * *");
+
+                        //options.AddAlarm(alarm1);
+                    }); 
+
+
+
+                    
+
                     //services.AddSingleton<IHostedService, MyHostedService>();
                     services.AddHostedService<JobTrackingService>();
 
                     services.AddTransient<AlarmJob>();
                     services.AddTransient<IConsolePrintingService, ConsolePrintingService>();
                     services.AddSingleton<IAlarmService, AlarmService>();
-                    
+                    services.AddSingleton<IAlarmManager, AlarmManager>();
+
 
                 })
             .UseSerilog();
