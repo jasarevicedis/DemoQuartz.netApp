@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             label1 = new Label();
-            textBox1 = new TextBox();
+            txtAlarmName = new TextBox();
             checkBox1 = new CheckBox();
             comboBox1 = new ComboBox();
             comboBox2 = new ComboBox();
@@ -48,12 +48,12 @@
             label1.Text = "Add new alarm";
             label1.Click += label1_Click;
             // 
-            // textBox1
+            // txtAlarmName
             // 
-            textBox1.Location = new Point(56, 224);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(341, 27);
-            textBox1.TabIndex = 1;
+            txtAlarmName.Location = new Point(56, 224);
+            txtAlarmName.Name = "txtAlarmName";
+            txtAlarmName.Size = new Size(341, 27);
+            txtAlarmName.TabIndex = 1;
             // 
             // checkBox1
             // 
@@ -111,7 +111,7 @@
             Controls.Add(comboBox2);
             Controls.Add(comboBox1);
             Controls.Add(checkBox1);
-            Controls.Add(textBox1);
+            Controls.Add(txtAlarmName);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Name = "AddAlarmForm";
@@ -124,7 +124,7 @@
         #endregion
 
         private Label label1;
-        private TextBox textBox1;
+        private TextBox txtAlarmName;
         private CheckBox checkBox1;
         private ComboBox comboBox1;
         private ComboBox comboBox2;

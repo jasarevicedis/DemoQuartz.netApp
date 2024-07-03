@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlarmApp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +13,7 @@ namespace AlarmpAppGUI
 {
     public partial class AddAlarmForm : Form
     {
+        public Alarm Alarm { get; private set; }
         public AddAlarmForm()
         {
             InitializeComponent();
@@ -40,6 +42,13 @@ namespace AlarmpAppGUI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            string alarmName = txtAlarmName.Text;
+            //string description = txtDescription.Text;
+            //int snoozeTime = int.Parse(txtSnoozeTime.Text);
+            //string cronExpression = txtCronExpression.Text;
+
+            Alarm = new Alarm(alarmName,0,"");
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

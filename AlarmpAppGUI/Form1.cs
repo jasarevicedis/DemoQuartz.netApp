@@ -1,20 +1,25 @@
+using AlarmApp.Components;
+using AlarmApp.Models;
+
 namespace AlarmpAppGUI
 {
     public partial class Form1 : Form
     {
         private int alarmCount = 0;
-        public Form1()
+        private readonly IAlarmManager _alarmManager;
+        public Form1(IAlarmManager alarmManager)
         {
             InitializeComponent();
+            _alarmManager = alarmManager;
             for (int i = 0; i < tableLayoutPanel1.ColumnCount; i++)
             {
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150)); 
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
-
+            await LoadAlarms();
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -31,12 +36,31 @@ namespace AlarmpAppGUI
         {
 
         }
-        private void AddAlarm()
+
+        private async Task LoadAlarms()
         {
+            var alarms = await _alarmManager.GetAlarms();
+
+            foreach (var alarm in alarms)
+            {
+                AddAlarm(alarm);
+            }
+        }
+        private void AddAlarm(Alarm alarm)
+        {
+            var card = new AlarmCard
+            {
+                Name = "card" + alarmCount++,
+                Dock = DockStyle.Fill,
+                AlarmName = alarm.Name,
+                //AlarmSnoozeTime = alarm.SnoozeTime,
+                //AlarmCronExpression = alarm.CronExpression
+            };
+            /*
             var card = new AlarmCard();
             card.Name = "card" + alarmCount++;
             card.Dock = DockStyle.Fill;
-
+            */
             // Add an event handler for the delete button
             //card.DeleteButton.Click += (sender, e) => DeleteCard(card);
 
@@ -57,7 +81,9 @@ namespace AlarmpAppGUI
             {
                 if (addAlarmForm.ShowDialog() == DialogResult.OK)
                 {
-                    AddAlarm();
+                    var alarm = addAlarmForm.Alarm;
+                    _alarmManager.AddAlarm(alarm);
+                    AddAlarm(alarm);
                 }
             }
         }

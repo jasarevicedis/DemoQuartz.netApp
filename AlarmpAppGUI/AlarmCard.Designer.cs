@@ -6,7 +6,9 @@
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-
+        //private Label lblAlarmName;
+        //private Label lblSnoozeTime;
+        //private Label lblCronExpression;
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
@@ -31,7 +33,7 @@
             textBox1 = new TextBox();
             label1 = new Label();
             label2 = new Label();
-            label3 = new Label();
+            lblAlarmName = new Label();
             checkBox1 = new CheckBox();
             SuspendLayout();
             // 
@@ -68,17 +70,17 @@
             label2.Text = "AM";
             label2.Click += label2_Click;
             // 
-            // label3
+            // lblAlarmName
             // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI Semibold", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label3.ForeColor = SystemColors.ButtonFace;
-            label3.Location = new Point(13, 101);
-            label3.Name = "label3";
-            label3.Size = new Size(85, 31);
-            label3.TabIndex = 3;
-            label3.Text = "Alarm1";
-            label3.Click += label3_Click;
+            lblAlarmName.AutoSize = true;
+            lblAlarmName.Font = new Font("Segoe UI Semibold", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblAlarmName.ForeColor = SystemColors.ButtonFace;
+            lblAlarmName.Location = new Point(13, 101);
+            lblAlarmName.Name = "lblAlarmName";
+            lblAlarmName.Size = new Size(85, 31);
+            lblAlarmName.TabIndex = 3;
+            lblAlarmName.Text = "Alarm1";
+            //lblAlarmName.Click += lblAlarmName_Click;
             // 
             // checkBox1
             // 
@@ -94,7 +96,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Gray;
             Controls.Add(checkBox1);
-            Controls.Add(label3);
+            Controls.Add(lblAlarmName);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(textBox1);
@@ -110,7 +112,7 @@
         private TextBox textBox1;
         private Label label1;
         private Label label2;
-        private Label label3;
+        private Label lblAlarmName;
         private CheckBox checkBox1;
     }
 }

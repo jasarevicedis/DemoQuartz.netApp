@@ -12,6 +12,25 @@ namespace AlarmpAppGUI
 {
     public partial class AlarmCard : UserControl
     {
+        public string AlarmName
+        {
+            get => lblAlarmName.Text;
+            set => lblAlarmName.Text = value;
+        }
+
+        /*
+        public int AlarmSnoozeTime
+        {
+            get => int.Parse(lblSnoozeTime.Text);
+            set => lblSnoozeTime.Text = value.ToString();
+        }
+
+        public string AlarmCronExpression
+        {
+            get => lblCronExpression.Text;
+            set => lblCronExpression.Text = value;
+        }*/
+
         public AlarmCard()
         {
             InitializeComponent();
