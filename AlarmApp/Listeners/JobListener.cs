@@ -1,4 +1,4 @@
-﻿using AlarmApp.Configuration;
+﻿using AlarmApp.Util.Configuration;
 using Quartz;
 using Serilog;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlarmApp.Components
+namespace AlarmApp.Console.Listeners
 {
     internal class JobListener : IJobListener
     {

@@ -1,4 +1,4 @@
-﻿using AlarmApp.Jobs;
+﻿using AlarmApp.Console.Jobs;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlarmApp.Services
+namespace AlarmApp.Console.Services
 {
     public interface IAlarmService
     {

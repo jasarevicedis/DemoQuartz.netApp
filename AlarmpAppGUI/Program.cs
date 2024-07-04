@@ -1,13 +1,14 @@
-using AlarmApp.Components;
+
 using Microsoft.Extensions.Hosting;
-using AlarmApp.Components;
+//using AlarmApp.Components;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows.Forms;
 using Quartz.Impl;
 using Quartz;
+using AlarmApp.Console.Services;
 
-namespace AlarmpAppGUI
+namespace AlarmApp.GUI
 {
     static class Program
     {

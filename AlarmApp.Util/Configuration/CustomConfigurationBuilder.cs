@@ -1,6 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.UserSecrets;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
-namespace AlarmApp.Configuration
+namespace AlarmApp.Util.Configuration
 {
     public static class CustomConfigurationBuilder
     {

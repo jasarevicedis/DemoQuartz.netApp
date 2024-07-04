@@ -9,7 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AlarmApp\AlarmAppConsole.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AlarmApp.Util\AlarmApp.Util.csproj" />
+    <ProjectReference Include="..\AlarmApp\AlarmApp.Console.csproj" />
+    <ProjectReference Include="..\DAL\AlarmApp.DAL.csproj" />
   </ItemGroup>
 
 </Project>

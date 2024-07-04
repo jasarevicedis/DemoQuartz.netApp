@@ -1,4 +1,4 @@
-﻿namespace AlarmApp.DAL
+﻿namespace AlarmApp.Util
 {
     public class Class1
     {

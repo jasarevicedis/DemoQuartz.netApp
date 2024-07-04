@@ -1,7 +1,7 @@
-﻿using AlarmApp.Components;
-using AlarmApp.Configuration;
-using AlarmApp.Jobs;
-using AlarmApp.Services;
+﻿using AlarmApp.Util.Configuration;
+using AlarmApp.Console.Jobs;
+using AlarmApp.Console.Services;
+using AlarmApp.Console.Listeners;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,10 +17,10 @@ using System.Text.Json;
 using System.Collections.Specialized;
 using System.Reflection;
 using static Quartz.Logging.OperationName;
-using AlarmApp.Models;
+using AlarmApp.DAL.Models;
 using Microsoft.Extensions.Options;
 
-namespace AlarmApp
+namespace AlarmApp.Console
 {
     public class Program
     {
@@ -32,7 +32,7 @@ namespace AlarmApp
             string currentExecutionPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             
 
-            await Console.Out.WriteLineAsync($"Current path: {currentExecutionPath}");
+            await System.Console.Out.WriteLineAsync($"Current path: {currentExecutionPath}");
 
             var configFileName = "AppSettings.json";
 
@@ -62,17 +62,17 @@ namespace AlarmApp
             //here is when jobs and triggers are stored to database
             Log.Information($"Scheduler Id: {scheduler.SchedulerInstanceId}, Scheduler name: {scheduler.SchedulerName}");
 
-            Alarm alarm1 = new Alarm("TestAlarm7777", 200, "0/2 * * ? * * *");
+            Alarm alarm1 = new Alarm("TestAlarm787", 200, "0/2 * * ? * * *");
 
             var alarmManager = host.Services.GetRequiredService<IAlarmManager>();
 
             await alarmManager.AddAlarm(alarm1);
-
+            /*
             var alarms = await alarmManager.GetAlarms();
             foreach (var alarm in alarms)
             {
-                Console.WriteLine($"Alarm: {alarm.Name}, Snooze: {alarm.SnoozeTime}, Cron: {alarm.CronExpression}");
-            }
+                System.Console.WriteLine($"Alarm: {alarm.Name}, Snooze: {alarm.SnoozeTime}, Cron: {alarm.CronExpression}");
+            }*/
 
             
 
@@ -97,8 +97,8 @@ namespace AlarmApp
                 .ConfigureServices((hostContext, services) =>
                 {
                     
-                    string connectionString = hostContext.Configuration.GetConnectionString("DefaultConnection");
-                    
+                    string connectionString = "Data Source=C:\\Users\\EdisJasarevic\\source\\repos\\AlarmApp\\DAL\\Data\\quartz.db;";
+
                     services.AddSingleton(typeof(IAppSettingsConfiguration), _appSettings);
 
                     services.AddQuartzHostedService(q => q.WaitForJobsToComplete = false);

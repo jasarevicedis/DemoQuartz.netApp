@@ -1,4 +1,4 @@
-﻿namespace AlarmpAppGUI
+﻿namespace AlarmApp.GUI
 {
     partial class Form1
     {

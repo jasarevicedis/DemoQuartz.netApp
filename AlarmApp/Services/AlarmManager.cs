@@ -1,11 +1,11 @@
-﻿using AlarmApp.Jobs;
-using AlarmApp.Models;
+﻿using AlarmApp.Console.Jobs;
+using AlarmApp.DAL.Models;
 using Microsoft.Data.Sqlite;
 using Quartz;
 using Quartz.Core;
 
 
-namespace AlarmApp.Components
+namespace AlarmApp.Console.Services
 {
 
     public interface IAlarmManager
@@ -16,7 +16,7 @@ namespace AlarmApp.Components
     }
     public class AlarmManager: IAlarmManager
     {
-        private static readonly string connectionString = "Data Source=C:\\Users\\EdisJasarevic\\source\\repos\\AlarmApp\\AlarmApp\\quartz.db;";
+        private static readonly string connectionString = "Data Source=C:\\Users\\EdisJasarevic\\source\\repos\\AlarmApp\\DAL\\Data\\quartz.db;";
         private readonly ISchedulerFactory _schedulerFactory;
         //private static readonly string connectionString = $"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "quartz.db")}";
 

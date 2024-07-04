@@ -1,4 +1,4 @@
-﻿using AlarmApp.Models;
+﻿using AlarmApp.DAL.Models;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlarmApp.Interfaces
+namespace AlarmApp.Console.Interfaces
 {
     public interface IJobScheduler
     {

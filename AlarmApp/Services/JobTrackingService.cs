@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Impl.Matchers;
 
-namespace AlarmApp.Services
+namespace AlarmApp.Console.Services
 {
     public interface IMyHostedService
     {

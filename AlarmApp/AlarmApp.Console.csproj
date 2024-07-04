@@ -14,7 +14,7 @@
 		</None>
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.6" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-		<PackageReference Include="Quartz" Version="3.9.0" />
+		<PackageReference Include="Quartz" Version="3.10.0" />
 		<PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.9.0" />
 		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.9.0" />
 		<PackageReference Include="Quartz.Serialization.Json" Version="3.9.0" />
@@ -38,8 +38,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BLL\BLL.csproj" />
-	  <ProjectReference Include="..\DAL\DAL.csproj" />
+	  <ProjectReference Include="..\AlarmApp.Util\AlarmApp.Util.csproj" />
+	  <ProjectReference Include="..\DAL\AlarmApp.DAL.csproj" />
 	</ItemGroup>
 
 </Project>

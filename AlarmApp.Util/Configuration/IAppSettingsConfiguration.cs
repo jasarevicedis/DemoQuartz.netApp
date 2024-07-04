@@ -1,4 +1,4 @@
-﻿namespace AlarmApp.Configuration
+﻿namespace AlarmApp.Util.Configuration
 {
     public interface IAppSettingsConfiguration
     {

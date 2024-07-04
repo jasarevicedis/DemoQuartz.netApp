@@ -4,20 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlarmApp.Components
+namespace AlarmApp.Console.Services
 {
-    public class CronExpressionManager
+    public class CronExpressionService
     {
         private List<DayOfWeek> _daysOfWeek;
         private int _hour;
         private int _minute;
 
-        public CronExpressionManager()
+        public CronExpressionService()
         {
             _daysOfWeek = new List<DayOfWeek>();
         }
 
-        public CronExpressionManager SetTime(int hour, int minute)
+        public CronExpressionService SetTime(int hour, int minute)
         {
             if (hour < 0 || hour > 23)
                 throw new ArgumentException("Hour must be between 0 and 23.");
@@ -30,7 +30,7 @@ namespace AlarmApp.Components
             return this;
         }
 
-        public CronExpressionManager SetDaysOfWeek(params DayOfWeek[] daysOfWeek)
+        public CronExpressionService SetDaysOfWeek(params DayOfWeek[] daysOfWeek)
         {
             _daysOfWeek = daysOfWeek.ToList();
             return this;

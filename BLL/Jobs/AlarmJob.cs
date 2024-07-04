@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using AlarmApp.Console.Services;
 using Serilog;
 
-namespace AlarmApp.Console.Jobs
+namespace AlarmApp.BLL.Jobs
 {
     internal class AlarmJob : IJob
     {

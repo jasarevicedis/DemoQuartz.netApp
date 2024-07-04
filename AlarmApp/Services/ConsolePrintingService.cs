@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlarmApp.Services
+namespace AlarmApp.Console.Services
 {
     public interface IConsolePrintingService
     {
@@ -23,12 +23,12 @@ namespace AlarmApp.Services
             int footerLineCount = longestLineLength - 4 + 16;
             string footer = "└" + new string('-', footerLineCount) + "┘";
             
-            Console.WriteLine(header);
+            System.Console.WriteLine(header);
             foreach (var str in content)
             {
-                Console.WriteLine(str);
+                System.Console.WriteLine(str);
             }
-            Console.WriteLine(footer);
+            System.Console.WriteLine(footer);
 
         }
     }

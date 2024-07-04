@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AlarmpAppGUI
+namespace AlarmApp.GUI
 {
     public partial class AlarmCard : UserControl
     {

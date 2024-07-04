@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlarmApp.Models
+namespace AlarmApp.DAL.Models
 {
     [Serializable]
     public class Alarm

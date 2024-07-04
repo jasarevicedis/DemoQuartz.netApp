@@ -1,4 +1,4 @@
-﻿namespace AlarmpAppGUI
+﻿namespace AlarmApp.GUI
 {
     partial class AddAlarmForm
     {
@@ -35,6 +35,7 @@
             comboBox2 = new ComboBox();
             button1 = new Button();
             button2 = new Button();
+            dateTimePicker1 = new DateTimePicker();
             SuspendLayout();
             // 
             // label1
@@ -101,11 +102,19 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // dateTimePicker1
+            // 
+            dateTimePicker1.Location = new Point(56, 77);
+            dateTimePicker1.Name = "dateTimePicker1";
+            dateTimePicker1.Size = new Size(341, 27);
+            dateTimePicker1.TabIndex = 7;
+            // 
             // AddAlarmForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(421, 595);
+            Controls.Add(dateTimePicker1);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(comboBox2);
@@ -130,5 +139,6 @@
         private ComboBox comboBox2;
         private Button button1;
         private Button button2;
+        private DateTimePicker dateTimePicker1;
     }
 }

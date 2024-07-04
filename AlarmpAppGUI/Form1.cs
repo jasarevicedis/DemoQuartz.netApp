@@ -1,7 +1,8 @@
-using AlarmApp.Components;
-using AlarmApp.Models;
 
-namespace AlarmpAppGUI
+using AlarmApp.DAL.Models;
+using AlarmApp.Console.Services;
+
+namespace AlarmApp.GUI
 {
     public partial class Form1 : Form
     {
