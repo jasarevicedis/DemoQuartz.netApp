@@ -46,7 +46,7 @@ namespace AlarmApp.Console
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(config)
                 .CreateLogger();
-
+            
             _configuration = CustomConfigurationBuilder.Build(currentExecutionPath, "AppSettings", "Debug");
 
             _configuration.Bind("Configuration", _appSettings);
@@ -62,8 +62,8 @@ namespace AlarmApp.Console
             //here is when jobs and triggers are stored to database
             Log.Information($"Scheduler Id: {scheduler.SchedulerInstanceId}, Scheduler name: {scheduler.SchedulerName}");
 
-            Alarm alarm1 = new Alarm("TestAlarm787", 200, "0/2 * * ? * * *");
-
+            Alarm alarm1 = new Alarm("TestAlarm401", 200, "0/2 * * ? * * *");
+            Alarm alarm2 = new Alarm();
             var alarmManager = host.Services.GetRequiredService<IAlarmManager>();
 
             await alarmManager.AddAlarm(alarm1);
@@ -97,7 +97,7 @@ namespace AlarmApp.Console
                 .ConfigureServices((hostContext, services) =>
                 {
                     
-                    string connectionString = "Data Source=C:\\Users\\EdisJasarevic\\source\\repos\\AlarmApp\\DAL\\Data\\quartz.db;";
+                    string connectionString = "Data Source=C:\\Users\\EdisJasarevic\\Source\\Repos\\AlarmApp\\DAL\\Data\\quartz.db";
 
                     services.AddSingleton(typeof(IAppSettingsConfiguration), _appSettings);
 
@@ -140,7 +140,7 @@ namespace AlarmApp.Console
 
                     services.AddHostedService<JobTrackingService>();
 
-                    services.AddTransient<AlarmJob>();
+                    //services.AddTransient<AlarmJob>();
                     services.AddTransient<IConsolePrintingService, ConsolePrintingService>();
                     services.AddSingleton<IAlarmService, AlarmService>();
                     services.AddSingleton<IAlarmManager, AlarmManager>();
