@@ -64,7 +64,7 @@ namespace AlarmApp.Console
 
             Alarm alarm1 = new Alarm("TestAlarm401", 200, "0/2 * * ? * * *");
             Alarm alarm2 = new Alarm("TestAlarm501", 500, "0/2 * * ? * * *");
-            Alarm alarm3 = new Alarm("TestAlarm601", 500, "0/2 * * ? * * *");
+            Alarm alarm3 = new Alarm("TestAlarm701", 500, "0/2 * * ? * * *");
             var alarmManager = host.Services.GetRequiredService<IAlarmManager>();
 
             await alarmManager.AddAlarm(alarm1);
