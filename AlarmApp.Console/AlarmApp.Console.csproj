@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UserSecretsId>f393a653-74d5-41ac-ac97-724fcfefc5d6</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Update="AppSettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="Quartz" Version="3.10.0" />
+		<PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.9.0" />
+		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.9.0" />
+		<PackageReference Include="Quartz.Serialization.Json" Version="3.9.0" />
+		<PackageReference Include="Serilog" Version="4.0.0" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
+		<PackageReference Include="Serilog" Version="3.1.1" />
+		<PackageReference Include="Serilog.Expressions" Version="4.0.0" />
+		<PackageReference Include="Serilog.Enrichers.Environment" Version="2.3.0" />
+		<PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
+		<PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+		<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
+		<PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="Serilog.Sinks.Trace" Version="3.0.0" />
+		<PackageReference Include="System.Data.SQLite" Version="1.0.118" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\AlarmApp.DAL\AlarmApp.DAL.csproj" />
+	  <ProjectReference Include="..\AlarmApp.Util\AlarmApp.Util.csproj" />
+	  <ProjectReference Include="..\DAL\AlarmApp.DAL.csproj" />
+	</ItemGroup>
+
+</Project>
